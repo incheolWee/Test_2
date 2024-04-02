@@ -12,6 +12,7 @@
 <table>
   <thead>
   <tr>
+    <th>#</th>
     <th>File Name</th>
     <th>Download</th>
     <th>View</th>
@@ -19,7 +20,8 @@
   </tr>
   </thead>
   <tbody>
-  <tr th:each="file : ${files}">
+  <tr th:each="file, iterStat : ${files}">
+    <td th:text="${iterStat.count}"></td> <!-- 각 파일에 번호 매기기 -->
     <td th:text="${file}"></td>
     <td><a th:href="@{/downloadFile/{fileName}(fileName=${file})}">Download</a></td>
     <td><a th:href="@{'/viewFile/' + ${file}}">View</a></td>
