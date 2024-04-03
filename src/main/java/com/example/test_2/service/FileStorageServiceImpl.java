@@ -32,7 +32,7 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public String storeFile(MultipartFile file) {
+    public void storeFile(MultipartFile file) {
         // 파일명을 정리합니다(경로 순회를 방지하기 위함).
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         try {
@@ -45,7 +45,6 @@ public class FileStorageServiceImpl implements FileStorageService {
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
-            return fileName;
         } catch (IOException ex) {
             throw new RuntimeException("Could not store file " + fileName + ". Please try again!", ex);
         }
