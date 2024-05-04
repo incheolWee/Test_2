@@ -14,21 +14,21 @@ public class File {
     private long id;
 
     @Column(name ="file_name")
-    private String file_name;
+    private String fileName;
 
     @Column(name = "file_path")
-    private String file_path;
+    private String filePath;
 
     @Column(name= "file_writer")
-    private String file_writer;
+    private String fileWriter;
 
     @Column(name="file_size")
-    private String file_size;
+    private String fileSize;
 
     @Column(name="create_date")
-    private String crete_data;
+    private String creteData;
 
     @Column(name="update_data")
-    private String update_data;
+    private String updateData;
 
 }

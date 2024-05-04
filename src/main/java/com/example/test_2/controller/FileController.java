@@ -24,28 +24,33 @@ public class FileController {
 
     @GetMapping("/")
     public String listFiles(Model model) {
-        List<String> files = fileStorageService.loadAllFiles();
-        model.addAttribute("files", files);
-        return "files";
+        // 파일 ID 리스트를 불러와서 모델에 추가
+        List<Long> fileIds = fileStorageService.loadAllFiles();
+        model.addAttribute("files", fileIds);
+        return "files";  // 파일 목록을 보여주는 뷰 이름
     }
 
     @PostMapping("/uploadFile")
     public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
-        fileStorageService.storeFile(file);
-        redirectAttributes.addFlashAttribute("message", "File uploaded successfully! [" + file.getOriginalFilename() + "]");
+        // 파일을 저장하고 생성된 파일 ID를 받아옵니다.
+        long fileId = fileStorageService.storeFile(file);
+        redirectAttributes.addFlashAttribute("message", "File uploaded successfully! ID: " + fileId);
         return "redirect:/";
     }
 
-    @GetMapping("/downloadFile/{fileName:.+}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
-        Resource resource = fileStorageService.loadFileAsResource(fileName);
+    @GetMapping("/downloadFile/{fileId}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable long fileId) {
+        // 파일 ID를 사용하여 파일 리소스를 불러옵니다.
+        Resource resource = fileStorageService.loadFileAsResource(fileId);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
     }
-    @GetMapping("/viewFile/{fileName:.+}")
-    public ResponseEntity<Resource> viewFile(@PathVariable String fileName) {
-        Resource resource = fileStorageService.loadFileAsResource(fileName);
+
+    @GetMapping("/viewFile/{fileId}")
+    public ResponseEntity<Resource> viewFile(@PathVariable long fileId) {
+        // 파일 ID를 사용하여 파일 리소스를 불러오고 MIME 타입을 설정합니다.
+        Resource resource = fileStorageService.loadFileAsResource(fileId);
         String mimeType;
         try {
             mimeType = Files.probeContentType(resource.getFile().toPath());
@@ -59,18 +64,11 @@ public class FileController {
                 .body(resource);
     }
 
-//    @GetMapping("/viewFilePage/{fileName:.+}")
-//    public String viewFilePage(@PathVariable String fileName, Model model) {
-//        model.addAttribute("fileName", fileName);
-//        return "viewFile"; // viewFile.html 페이지로 이동
-//    }
-
-
     @PostMapping("/deleteFile")
-    public String deleteFile(@RequestParam("fileName") String fileName, RedirectAttributes redirectAttributes) {
-        fileStorageService.deleteFile(fileName);
-        redirectAttributes.addFlashAttribute("message", "File deleted successfully: " + fileName);
+    public String deleteFile(@RequestParam("fileId") long fileId, RedirectAttributes redirectAttributes) {
+        // 파일 ID를 사용하여 파일을 삭제합니다.
+        fileStorageService.deleteFile(fileId);
+        redirectAttributes.addFlashAttribute("message", "File deleted successfully. ID: " + fileId);
         return "redirect:/";
     }
-
 }
