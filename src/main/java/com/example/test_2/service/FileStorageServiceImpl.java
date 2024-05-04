@@ -59,7 +59,7 @@ public class FileStorageServiceImpl implements FileStorageService {
     public Resource loadFileAsResource(String fileName) {
         try {
             Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
-            Resource resource = new UrlResource(f ilePath.toUri());
+            Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
