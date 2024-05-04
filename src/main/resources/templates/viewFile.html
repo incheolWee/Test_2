@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>View File</title>
+</head>
+<body>
+
+<h1>Viewing File</h1>
+<div>
+  <!-- 파일 보여주기 (예시로 이미지 파일을 가정) -->
+  <img th:src="@{'/files/' + ${fileName}}" />
+  <p th:text="${fileName}"></p>
+</div>
+<!-- 메인 페이지로 돌아가기 -->
+<a href="/">돌아가기</a>
+
+</body>
+</html>

@@ -58,6 +58,14 @@ public class FileController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
     }
+
+//    @GetMapping("/viewFilePage/{fileName:.+}")
+//    public String viewFilePage(@PathVariable String fileName, Model model) {
+//        model.addAttribute("fileName", fileName);
+//        return "viewFile"; // viewFile.html 페이지로 이동
+//    }
+
+
     @PostMapping("/deleteFile")
     public String deleteFile(@RequestParam("fileName") String fileName, RedirectAttributes redirectAttributes) {
         fileStorageService.deleteFile(fileName);
