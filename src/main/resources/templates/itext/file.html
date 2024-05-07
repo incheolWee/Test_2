@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Image to PDF</title>
+</head>
+<body>
+<h1>Add Image to PDF</h1>
+<form id="pdfForm" enctype="multipart/form-data">
+    <div>
+        <label for="pdfFile">Select PDF file:</label>
+        <input type="file" id="pdfFile" name="pdfFile" required>
+    </div>
+    <div>
+        <label for="imageFile">Select Image file:</label>
+        <input type="file" id="imageFile" name="imageFile" required>
+    </div>
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+    document.getElementById('pdfForm').onsubmit = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append('pdfFile', document.getElementById('pdfFile').files[0]);
+        formData.append('imageFile', document.getElementById('imageFile').files[0]);
+
+        const response = await fetch('/itext/add-image', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            alert("Image added successfully to PDF. Click OK to view the result.");
+            window.location.href = '/itext/result';  // 컨트롤러에서 정의된 엔드포인트
+        } else {
+            const result = await response.text();
+            alert("Error adding image to PDF: " + result);
+        }
+    };
+
+</script>
+</body>
+</html>
