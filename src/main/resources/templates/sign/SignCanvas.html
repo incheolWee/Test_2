@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Signature Pad</title>
+  <style>
+    canvas {
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+<body>
+<h2>Draw Signature Below</h2>
+<canvas id="signatureCanvas" width="400" height="200"></canvas>
+<button onclick="saveSignature()">Save Signature</button>
+<button onclick="clearCanvas()">Clear</button>
+<script>
+  const canvas = document.getElementById('signatureCanvas');
+  const context = canvas.getContext('2d');
+  let isDrawing = false;
+
+  canvas.addEventListener('mousedown', (event) => {
+    isDrawing = true;
+    context.beginPath();
+    context.moveTo(event.offsetX, event.offsetY);
+  });
+
+  canvas.addEventListener('mousemove', (event) => {
+    if (isDrawing) {
+      context.lineTo(event.offsetX, event.offsetY);
+      context.stroke();
+    }
+  });
+
+  canvas.addEventListener('mouseup', () => isDrawing = false);
+  canvas.addEventListener('mouseout', () => isDrawing = false);
+
+  function clearCanvas() {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  function saveSignature() {
+    const dataURL = canvas.toDataURL('image/png');
+    fetch('/saveSignature', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image: dataURL })
+    })
+            .then(response => response.json())
+            .then(data => console.log('Signature saved:', data))
+            .catch(error => console.error('Error:', error));
+  }
+</script>
+</body>
+</html>
